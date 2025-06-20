@@ -1,0 +1,108 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "OM Bank - Airtime Saver";
+}
+
+<div class="container">
+    <div class="logo">
+        <img src="~/images/ombank-logo.png" alt="OM Bank Logo" style="max-width: 150px; margin: 20px auto; display: block;" />
+    </div>
+    <form method="post" class="form" id="airtimeForm">
+        <div class="form-group">
+            <label>Airtime Provider</label><br />
+            <input type="radio" id="providerMTN" name="AirtimeProvider" value="MTN"
+                    @(Model.AirtimeProvider == "MTN" ? "checked" : "") />
+            <label for="providerMTN" class="provider-label">
+                <img src="~/images/mtn.png" alt="MTN" class="provider-logo" />
+            </label>
+            <input type="radio" id="providerVodacom" name="AirtimeProvider" value="Vodacom"
+                    @(Model.AirtimeProvider == "Vodacom" ? "checked" : "") />
+            <label for="providerVodacom" class="provider-label">
+                <img src="~/images/vodacom.png" alt="Vodacom" class="provider-logo" />
+            </label>
+            <input type="radio" id="providerCellC" name="AirtimeProvider" value="CellC"
+                    @(Model.AirtimeProvider == "CellC" ? "checked" : "") />
+            <label for="providerCellC" class="provider-label">
+                <img src="~/images/cellc.png" alt="CellC" class="provider-logo" />
+            </label>
+        </div>
+
+
+        <div class="form-group">
+            <label asp-for="AirtimeAmount">Airtime Amount</label>
+            <input asp-for="AirtimeAmount" class="form-control" type="range" min="0" max="1000" step="1"
+                   value="@Model.AirtimeAmount"
+                   id="AirtimeAmount"
+                   oninput="updateLabels()" required />
+            <span id="airtimeValue">R@Model.AirtimeAmount.ToString("N2")</span>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="showDetails" onchange="toggleDetails()" />
+            <label for="showDetails">Would you like to invest a portion?</label>
+        </div>
+
+        <div id="detailsSection" style="display:none;">
+            <div class="form-group">
+                <label asp-for="InvestmentPercentage">Investment Percentage</label>
+                <input asp-for="InvestmentPercentage" class="form-control" type="range" min="0" max="100" step="1"
+                       value="@Model.InvestmentPercentage"
+                       id="InvestmentPercentage"
+                       oninput="updateLabels()" required />
+                <span id="investmentPercentageValue">@Model.InvestmentPercentage</span>%
+            </div>
+            <div class="form-group">
+                <label>Investment Amount</label>
+                <span id="investmentAmountLabel">
+                    R@((Model.AirtimeAmount * (Model.InvestmentPercentage / 100M)).ToString("N2"))
+                </span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SavingFor">What are you saving for?</label>
+                <input asp-for="SavingFor" class="form-control" type="text" maxlength="100" required />
+            </div>
+            <div class="form-group">
+                <span class="input-group-text">R</span>
+                <input asp-for="AmountNeeded" class="form-control" type="number" min="0" step="0.01" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DateNeededBy">Date Needed By</label>
+                <input asp-for="DateNeededBy" class="form-control" type="date" required />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Submit</button>
+        @if (!string.IsNullOrEmpty(Model.AiFoundryResult))
+        {
+        <div class="alert alert-info">
+            <strong>AI Foundry Result:</strong> @Model.AiFoundryResult
+        </div>
+        }
+    </form>
+
+</div>
+
+@section Scripts {
+    <script>
+        function updateLabels() {
+            var airtime = parseFloat(document.getElementById('AirtimeAmount').value) || 0;
+            var percentage = parseFloat(document.getElementById('InvestmentPercentage').value) || 0;
+            document.getElementById('airtimeValue').textContent = 'R' + airtime.toFixed(2);
+            document.getElementById('investmentPercentageValue').textContent = percentage;
+            var investmentAmount = (airtime * (percentage / 100)).toFixed(2);
+            document.getElementById('investmentAmountLabel').textContent = 'R' + investmentAmount;
+        }
+
+        function toggleDetails() {
+            var details = document.getElementById('detailsSection');
+            var checkbox = document.getElementById('showDetails');
+            details.style.display = checkbox.checked ? 'block' : 'none';
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLabels();
+            toggleDetails();
+        });
+    </script>
+}
+
