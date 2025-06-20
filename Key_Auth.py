@@ -7,7 +7,7 @@ deployment = os.getenv("DEPLOYMENT_NAME", "gpt-4.1-mini")
 search_endpoint = os.getenv("SEARCH_ENDPOINT", "https://airtime-saver.search.windows.net")
 search_key = os.getenv("SEARCH_KEY", "put your Azure AI Search admin key here")
 search_index = os.getenv("SEARCH_INDEX_NAME", "airtimesaveridx")
-subscription_key = os.getenv("AZURE_OPENAI_API_KEY", "8XDpwwl9qdUBRTKGf9c8e0aBtzR4yqv8b1QPKIgqciD1shNrNfFSJQQJ99BFACfhMk5XJ3w3AAAAACOGMghd")
+subscription_key = os.getenv("AZURE_OPENAI_API_KEY", "API Key")
 
 api_version = "2025-01-01-preview"
 
